@@ -100,3 +100,23 @@ Copyright (c) 2024 by the Tradebyte Software GmbH.<br/>
 The names and images for `DevOps-Challenge` are trademarks of the Tradebyte Software GmbH.
 
 We love free software!
+
+---
+
+### Solution
+#### Creating Kubernetes manifests
+```bash
+mkdir -pv /home/vagrant/manifests/{redis,python-app}
+
+# Generate redis deployment
+k create deployment redis --image docker.io/redis:7.4.1-alpine3.20  --replicas 1 -oyaml --dry-run=client > manifests/redis/deployment.yaml
+
+# Generate redis svc
+k expose deploy/redis --port 6379 --dry-run=client -oyaml > manifests/redis/service.yaml
+
+# Generate python deployment
+k create deployment python-app --image ghcr.io/thejaxon/python-app --port 8000 --replicas 3 -oyaml --dry-run=client > manifests/python-app/deployment.yaml
+
+# Generate HPA defintion
+k autoscale deployment python-app --min=3 --max=5 --cpu-percent=60 -oyaml --dry-run=client > manifests/python-app/hpa.yaml
+```
