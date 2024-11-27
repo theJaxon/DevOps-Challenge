@@ -119,4 +119,7 @@ k create deployment python-app --image ghcr.io/thejaxon/python-app --port 8000 -
 
 # Generate HPA defintion
 k autoscale deployment python-app --min=3 --max=5 --cpu-percent=60 -oyaml --dry-run=client > manifests/python-app/hpa.yaml
+
+# Generate kustomization files
+kustomize create --autodetect
 ```
